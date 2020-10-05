@@ -1,4 +1,4 @@
-# Covid19-Tracker-Ireland
+# Covid19-Tracker
 
 Tracks daily cases for Ireland using the covid19 API: _https://covid19api.com/_
 
