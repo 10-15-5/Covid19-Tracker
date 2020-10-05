@@ -1,5 +1,7 @@
 # Covid19-Tracker
 
-Tracks daily cases for Ireland using the covid19 API: _https://covid19api.com/_
+Tracks daily cases for Ireland and the world using the covid19 API: _https://covid19api.com/_
+
+Allows the user to specify what country they want to see and what category they want to see: Cases, Recoveries or Deaths
 
 **Will be adding new parts soon
