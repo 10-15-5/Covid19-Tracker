@@ -11,7 +11,7 @@ def welcomescreen():
                 "4) Days since first confirmed case\t*N/A\n5) Today's Confirmed Cases\n6) World Cases\n")
     if ans != "6":
         print("Please enter the country you would like to see (Using their 3 letter country codes)")
-        country = input("eg. IRL = Ireland, GBR = United Kingdom, WOR = World\n").upper()
+        country = input("eg. IRL = Ireland, GBR = United Kingdom, USA = USA\n").upper()
         if country != "WOR":
             c = pycountry.countries.get(alpha_3=country).name
 
