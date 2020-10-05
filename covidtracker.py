@@ -5,18 +5,23 @@ from covidrequests import *
 
 def countryallstatus():
     today = datetime.datetime.now()
-
-    yesterday = today.day - 1
-    daybefore = today.day - 2
-
-    datey = datetime.datetime(today.year, today.month, yesterday)
-    dateb = datetime.datetime(today.year, today.month, daybefore, 23, 59)
+    datey = datetime.datetime(today.year, today.month, today.day-1)
+    dateb = datetime.datetime(today.year, today.month, today.day-2, 23, 59, 59)
+    date2daysago = datetime.datetime(today.year, today.month, today.day - 3, 23, 59, 59)
 
     temp = CountryAllStatus("https://api.covid19api.com/country/ireland", dateb, datey)
     r = CountryAllStatus.request(temp)
     response = urlcleanup(r)
 
-    print(response["Active"])
+    casesyest = response["Confirmed"]
+
+    temp = CountryAllStatus("https://api.covid19api.com/country/ireland", date2daysago, dateb)
+    r = CountryAllStatus.request(temp)
+    response = urlcleanup(r)
+
+    cases2days = response["Confirmed"]
+
+    print("Cases Confirmed Yesterday:\t", int(casesyest) - int(cases2days))
 
 
 def urlcleanup(r):
