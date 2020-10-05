@@ -1,3 +1,5 @@
 # Covid19-Tracker-Ireland
 
-Tracking cases day-by-day in Ireland
+Tracks daily cases for Ireland using the covid19 API: _https://api.covid19api.com/_
+
+**Will be adding new parts soon
