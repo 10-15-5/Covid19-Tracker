@@ -7,8 +7,12 @@ from covidrequests import *
 def welcomescreen():
     print("Welcome to the Covid-19 Tracker App")
 
-    ans = input("What would you like to see?\n1) Confirmed Cases\t*N/A\n2) Recovered\t*N/A\n3) Deaths\n"
-                "4) Days since first confirmed case\t*N/A\n5) Today's Confirmed Cases\n6) World Cases\n")
+    ans = input("What would you like to see?\n"
+                "1) Confirmed Cases\t*N/A\t\t\t2) Recovered\t*N/A\n"
+                "3) Deaths\t\t\t\t\t\t\t4) Days since first confirmed case\t*N/A\n"
+                "5) Today's Confirmed Cases\t\t\t6) World Cases\n"
+                "7) Cases Betweem Specific Dates\n")
+    
     if ans != "6":
         print("Please enter the country you would like to see (Using their 3 letter country codes)")
         country = input("eg. IRL = Ireland, GBR = United Kingdom, USA = USA\n").upper()
@@ -17,7 +21,7 @@ def welcomescreen():
 
         for i in range(len(c)):
             if c[i] == ' ':
-                country = c.replace(c[i], '-')
+                c = c.replace(c[i], '-')
 
         if ans == "1":
             print("Not available yet! Sorry")
@@ -29,6 +33,8 @@ def welcomescreen():
             print("Not available yet! Sorry")
         elif ans == "5":
             countrytotal(c)
+        elif ans == "7":
+            specificdates(c)
     else:
         worldcases()
 
@@ -90,6 +96,21 @@ def worldcases():
     recovered = response["NewRecovered"]
 
     print("New Cases:\t" + cases + "\nNew Deaths:\t" + deaths + "\nNew Recoveries:\t" + recovered)
+
+
+def specificdates(country):
+    date1 = input("Please enter a start date in the form dd/mm/yyyy:\n")
+    date2 = input("Please enter an end date in the form dd/mm/yyyy:\n")
+    date1 = date1.split("/")
+    date2 = date2.split("/")
+
+    date1 = datetime.datetime(int(date1[2]), int(date1[1]), int(date1[0]))
+    date2 = datetime.datetime(int(date2[2]), int(date2[1]), int(date2[0]))
+
+    temp = CountryAllStatus(country, date1, date2)
+    r = CountryAllStatus.request(temp)
+
+
 
 
 def urlcleanup(r):
