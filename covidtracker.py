@@ -18,7 +18,7 @@ def welcomescreen():
     ans = input("What would you like to see?\n"
                 "1) Total Numbers for country (Confirmed, Recoveries, Deaths & Active cases)\n"
                 "2) Deaths\t\t\t\t\t\t\t"
-                "3) Days since first confirmed case\t*N/A\n"
+                "3) Days since first confirmed case\n"
                 "4) Today's Confirmed Cases\t\t\t"
                 "5) World Cases\n"
                 "6) Cases Betweem Specific Dates\t*N/A\n")
