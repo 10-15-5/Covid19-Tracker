@@ -150,14 +150,18 @@ def dayssincefirst(country):
     :param country:
     :return prints to console:
     """
+    today = datetime.datetime.now().date()
     temp = DayOne(country)
     r = DayOne.request(temp)
     dets = r[0]
     date = dets["Date"]
+    date = date.split("T")
 
-    date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ").date()
+    date = datetime.datetime.strptime(date[0], "%Y-%m-%d").date()
+    delta = today - date
     print("The first reported case for " + country + " was on: " + str(date.day) +
-          "/" + str(date.month) + "/" + str(date.year))
+          "/" + str(date.month) + "/" + str(date.year) + "\nIt has been " + str(delta.days) + " days since the first "
+                                                                                              "confirmed case!")
 
 
 def worldcases():
