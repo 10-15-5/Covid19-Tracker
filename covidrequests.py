@@ -31,6 +31,18 @@ class CountryAllStatus:
         return response
 
 
+class DayOne:
+
+    def __init__(self, country):
+        self.country = country
+
+    def request(self):
+        url = "https://api.covid19api.com/dayone/country/" + self.country + "/status/confirmed"
+        response = requests.get(url).json()
+
+        return response
+
+
 class WorldCases:
 
     def __init__(self, date1, date2):
