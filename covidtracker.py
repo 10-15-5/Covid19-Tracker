@@ -178,8 +178,13 @@ def worldcases():
     r = WorldCases.request(temp)
     response = urlcleanup(r)
 
-    print("New Cases:\t" + response["NewConfirmed"] + "\nNew Deaths:\t" + response["NewDeaths"] +
-          "\nNew Recoveries:\t" + response["NewRecovered"])
+    print("Total Cases:\t\t" + f"{int(response['TotalConfirmed']):,d}" + "\nTotal Deaths:\t\t" +
+          f"{int(response['TotalDeaths']):,d}" +
+          "\nTotal Recoveries:\t" + f"{int(response['TotalRecovered']):,d}\n")
+
+    print("New Cases:\t\t\t" + f"{int(response['NewConfirmed']):,d}" + "\nNew Deaths:\t\t\t" +
+          f"{int(response['NewDeaths']):,d}" +
+          "\nNew Recoveries:\t\t" + f"{int(response['NewRecovered']):,d}")
 
 
 """def specificdates(country):
