@@ -49,6 +49,22 @@ class CountryAllStatus:
         return response
 
 
+class ByCountryTotalAllStatus:
+
+    def __init__(self, country):
+        self.country = country
+
+    def request(self):
+        """
+        Sends the country to the API and gets back a list object as a response.
+        :return list:   Returns a list response got from the API
+        """
+        url = "https://api.covid19api.com/total/country/" + self.country
+        response = requests.get(url).json()
+
+        return response
+
+
 class DayOne:
 
     def __init__(self, country):
