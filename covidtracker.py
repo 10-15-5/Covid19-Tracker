@@ -19,7 +19,7 @@ def welcomescreen():
                 "1) Total Numbers for country (Confirmed, Recoveries, Deaths & Active cases)\n"
                 "2) Deaths\t\t\t\t\t\t\t"
                 "3) Days since first confirmed case\n"
-                "4) Today's Confirmed Cases\t\t\t"
+                "4) Yesterday's Confirmed Cases\t\t"
                 "5) World Cases\n"
                 "6) Cases Betweem Specific Dates\t*N/A\n")
     
@@ -58,18 +58,15 @@ def totalnumbers(country):
     :param country:
     :return prints to console:
     """
-    today = datetime.datetime.now()
-    datey = datetime.datetime(today.year, today.month, today.day - 1)
-
-    temp = CountryAllStatus(country, datey, today)
-    r = CountryAllStatus.request(temp)
-    response = urlcleanup(r)
+    temp = ByCountryTotalAllStatus(country)
+    r = ByCountryTotalAllStatus.request(temp)
+    lastitem = r[-1]
 
     print("Total numbers for " + country)
-    print("Total Cases:\t\t" + response["Confirmed"] +
-          "\nTotal Deaths:\t\t" + response["Deaths"] +
-          "\nTotal Recoveries:\t" + response["Recovered"] +
-          "\nTotal Active Cases:\t" + response["Active"])
+    print("Total Cases:\t\t", f"{lastitem['Confirmed']:,d}",
+          "\nTotal Deaths:\t\t", f"{lastitem['Deaths']:,d}",
+          "\nTotal Recoveries:\t", f"{lastitem['Recovered']:,d}",
+          "\nTotal Active Cases:\t", f"{lastitem['Active']:,d}")
 
 
 def newcases(country):
@@ -101,7 +98,7 @@ def newcases(country):
 
     cases2days = response["Cases"]
 
-    print("Cases Confirmed Yesterday:\t", int(casesyest) - int(cases2days))
+    print("Cases Confirmed Yesterday:\t", f"{int(casesyest) - int(cases2days):,d}")
     print("This number includes all cases for all the different territories of this country")
 
 
@@ -134,7 +131,7 @@ def newdeaths(country):
 
     cases2days = response["Deaths"]
 
-    print("Deaths Confirmed Yesterday:\t", int(casesyest) - int(cases2days))
+    print("Deaths Confirmed Yesterday:\t", f"{int(casesyest) - int(cases2days):,d}")
 
 
 def dayssincefirst(country):
