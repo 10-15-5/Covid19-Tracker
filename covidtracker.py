@@ -21,8 +21,8 @@ def welcomescreen():
                 "3) Days since first confirmed case\n"
                 "4) Yesterday's Confirmed Cases\t\t"
                 "5) World Cases\n"
-                "6) Cases Betweem Specific Dates\t*N/A\n")
-    
+                "6) Cases Betweem Specific Dates\n")
+
     if ans != "5":
         print("Please enter the country you would like to see (Using their 3 letter country codes)")
         country = input("eg. IRL = Ireland, GBR = United Kingdom, USA = USA\n").upper()
@@ -41,8 +41,7 @@ def welcomescreen():
         elif ans == "4":
             newcases(c)
         elif ans == "6":
-            print("Not available sorry")
-            # specificdates(c)
+            specificdates(c)
     else:
         worldcases()
 
@@ -82,8 +81,8 @@ def newcases(country):
     :return prints to console:
     """
     today = datetime.datetime.now()
-    datey = datetime.datetime(today.year, today.month, today.day-1)
-    dateb = datetime.datetime(today.year, today.month, today.day-2, 23, 59, 59)
+    datey = datetime.datetime(today.year, today.month, today.day - 1)
+    dateb = datetime.datetime(today.year, today.month, today.day - 2, 23, 59, 59)
     date3daysago = datetime.datetime(today.year, today.month, today.day - 3, 23, 59, 59)
 
     temp = ByCountryTotal(country, dateb, datey)
@@ -187,17 +186,47 @@ def worldcases():
           "\nNew Recoveries:\t\t" + f"{int(response['NewRecovered']):,d}")
 
 
-"""def specificdates(country):
-    date1 = input("Please enter a start date in the form dd/mm/yyyy:\n")
-    date2 = input("Please enter an end date in the form dd/mm/yyyy:\n")
-    date1 = date1.split("/")
-    date2 = date2.split("/")
+def specificdates(country):
+    """
+    Returns all the info for a specific country between certain dates.
 
-    date1 = datetime.datetime(int(date1[2]), int(date1[1]), int(date1[0]))
-    date2 = datetime.datetime(int(date2[2]), int(date2[1]), int(date2[0]))
+    The UK and US aren't available yet as these countries have many different provinces and territories and I still
+    have yet to cater for that.
+    If you don't choose the US or UK you are then asked to enter a from date and a to date in the form dd/mm/yyyy.
+    It then converts these two dates to datetime objects so they can be passed through to the API.
+    It then passes the country, from date and to date through to the API and gets back a list of all the info between
+    the two specified dates.
+    Then it takes the first item form the list and the last item from the list as this is all we'll need to get the
+    info that will be shown to the user.
+    It then prints all the necessary info to the screen for the user.
+    :param country:
+    :return prints to console:
+    """
+    if country == "United-Kingdom" or country == "United-States":
+        print("This function is not available for " + country + " yet as I haven't configured all the different "
+                                                                "provinces, check back soon!")
+    else:
+        date1 = input("Please enter a start date in the form dd/mm/yyyy:\n")
+        date2 = input("Please enter an end date in the form dd/mm/yyyy:\n")
+        date1 = date1.split("/")
+        date2 = date2.split("/")
 
-    temp = CountryAllStatus(country, date1, date2)
-    r = CountryAllStatus.request(temp)"""
+        date1 = datetime.datetime(int(date1[2]), int(date1[1]), int(date1[0]))
+        date2 = datetime.datetime(int(date2[2]), int(date2[1]), int(date2[0]))
+
+        temp = CountryAllStatus(country, date1, date2)
+        r = CountryAllStatus.request(temp)
+
+        firstitem = r[0]
+        lastitem = r[-1]
+
+        print("These are the results for " + country + " between", date1.date(), "and", date2.date(), ":\n")
+        print("Amount of New Cases:\t\t" + f"{int(lastitem['Confirmed']) - int(firstitem['Confirmed']):,d}" +
+              "\nAmount of New Deaths:\t\t" + f"{int(lastitem['Deaths']) - int(firstitem['Deaths']):,d}" +
+              "\nAmount of New Recoveries:\t" + f"{int(lastitem['Recovered']) - int(firstitem['Recovered']):,d}" +
+              "\nAmount of New Active Cases:\t" + f"{int(lastitem['Active']) - int(firstitem['Active']):,d}" +
+              "\nTotal amount of cases by", date1.date(), ":\t\t" + f"{int(firstitem['Confirmed']):,d}" +
+              "\nTotal amount of cases by", date2.date(), ":\t\t" + f"{int(lastitem['Confirmed']):,d}")
 
 
 def urlcleanup(r):
@@ -217,7 +246,7 @@ def urlcleanup(r):
     mydict = {}
     strR = str(r)
     newstring = (strR.replace('"', '').replace(' ', '').replace("'", '').replace('{', '').replace('}',
-                   '').replace('[', '').replace(']', ''))
+                 '').replace('[','').replace(']', ''))
     new = re.split(",", newstring)
     for item in range(len(new)):
         temp = new[item].split(":", 1)
