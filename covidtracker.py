@@ -1,7 +1,10 @@
 import datetime
 import re
 import pycountry
+import numpy as np
+import matplotlib.pyplot as plt
 from covidrequests import *
+from matplotlib.dates import drange
 
 
 def welcomescreen():
@@ -21,7 +24,8 @@ def welcomescreen():
                 "3) Days since first confirmed case\n"
                 "4) Yesterday's Confirmed Cases\t\t"
                 "5) World Cases\n"
-                "6) Cases Betweem Specific Dates\n")
+                "6) Cases Betweem Specific Dates\t\t"
+                "7) Plot a country's cases (In Progress...)\n")
 
     if ans != "5":
         print("Please enter the country you would like to see (Using their 3 letter country codes)")
@@ -42,6 +46,8 @@ def welcomescreen():
             newcases(c)
         elif ans == "6":
             specificdates(c)
+        elif ans == "7":
+            plotcases(c)
     else:
         worldcases()
 
@@ -229,6 +235,37 @@ def specificdates(country):
               "\nTotal amount of cases by", date2.date(), ":\t\t" + f"{int(lastitem['Confirmed']):,d}")
 
 
+def plotcases(country):
+    if country == "United-Kingdom" or country == "United-States":
+        print("This function is not available for " + country + " yet as I haven't configured all the different "
+                                                                "provinces, check back soon!")
+    else:
+        cases = []
+        date1 = input("Please enter a start date in the form dd/mm/yyyy:\n")
+        date2 = input("Please enter an end date in the form dd/mm/yyyy:\n")
+        date1 = date1.split("/")
+        date2 = date2.split("/")
+
+        date1 = datetime.datetime(int(date1[2]), int(date1[1]), int(date1[0]))
+        date2 = datetime.datetime(int(date2[2]), int(date2[1]), int(date2[0])) + datetime.timedelta(days=1)
+        delta = datetime.timedelta(hours=24)
+        dates = drange(date1, date2, delta)
+
+        temp = CountryAllStatus(country, date1, date2)
+        r = CountryAllStatus.request(temp)
+        cleaned = cleanup(r)
+
+        for i in range(len(cleaned)):
+            if cleaned[i] == "Confirmed":
+                cases.append(int(cleaned[i+1]))
+
+        y = np.array(cases)
+
+        plt.plot_date(dates, y)
+        plt.title("Cases between " + str(date1) + " and " + str(date2), fontweight="bold")
+        plt.show()
+
+
 def urlcleanup(r):
     """
     Takes in a list and returns a dictionary equivalent so it is easier to access.
@@ -254,6 +291,15 @@ def urlcleanup(r):
             mydict.update({temp[0]: temp[1]})
 
     return mydict
+
+
+def cleanup(r):
+    strR = str(r)
+    newstring = (strR.replace('"', '').replace(' ', '').replace("'", '').replace('{', '').replace('}',
+                               '').replace('[', '').replace("]", ""))
+    list = re.split("[:,]", newstring)
+
+    return list
 
 
 welcomescreen()
