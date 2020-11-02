@@ -81,9 +81,9 @@ def newcases(country):
     :return prints to console:
     """
     today = datetime.datetime.now()
-    datey = datetime.datetime(today.year, today.month, today.day - 1)
-    dateb = datetime.datetime(today.year, today.month, today.day - 2, 23, 59, 59)
-    date3daysago = datetime.datetime(today.year, today.month, today.day - 3, 23, 59, 59)
+    datey = today - datetime.timedelta(days=1)
+    dateb = today - datetime.timedelta(days=2)
+    date3daysago = today - datetime.timedelta(days=3)
 
     temp = ByCountryTotal(country, dateb, datey)
     r = ByCountryTotal.request(temp)
@@ -114,9 +114,9 @@ def newdeaths(country):
     :return prints to console:
     """
     today = datetime.datetime.now()
-    datey = datetime.datetime(today.year, today.month, today.day - 1)
-    dateb = datetime.datetime(today.year, today.month, today.day - 2, 23, 59, 59)
-    date2daysago = datetime.datetime(today.year, today.month, today.day - 3, 23, 59, 59)
+    datey = today - datetime.timedelta(days=1)
+    dateb = today - datetime.timedelta(days=2)
+    date3daysago = today - datetime.timedelta(days=3)
 
     temp = CountryAllStatus(country, dateb, datey)
     r = CountryAllStatus.request(temp)
@@ -124,7 +124,7 @@ def newdeaths(country):
 
     casesyest = response["Deaths"]
 
-    temp = CountryAllStatus(country, date2daysago, dateb)
+    temp = CountryAllStatus(country, date3daysago, dateb)
     r = CountryAllStatus.request(temp)
     response = urlcleanup(r)
 
@@ -171,7 +171,7 @@ def worldcases():
     :return prints to console:
     """
     today = datetime.datetime.now()
-    datey = datetime.datetime(today.year, today.month, today.day - 1)
+    datey = today - datetime.timedelta(days=1)
 
     temp = WorldCases(datey, today)
     r = WorldCases.request(temp)
