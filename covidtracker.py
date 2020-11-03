@@ -28,26 +28,30 @@ def welcomescreen():
                 "7) Plot a country's cases (In Progress...)\n")
 
     if ans != "5":
-        print("Please enter the country you would like to see (Using their 3 letter country codes)")
-        country = input("eg. IRL = Ireland, GBR = United Kingdom, USA = USA\n").upper()
-        c = pycountry.countries.get(alpha_3=country).name
+        try:
+            print("Please enter the country you would like to see (Using their 3 letter country codes)")
+            country = input("eg. IRL = Ireland, GBR = United Kingdom, USA = USA\n").upper()
+            c = pycountry.countries.get(alpha_3=country).name
 
-        for i in range(len(c)):
-            if c[i] == ' ':
-                c = c.replace(c[i], '-')
+            for i in range(len(c)):
+                if c[i] == ' ':
+                    c = c.replace(c[i], '-')
 
-        if ans == "1":
-            totalnumbers(c)
-        elif ans == "2":
-            newdeaths(c)
-        elif ans == "3":
-            dayssincefirst(c)
-        elif ans == "4":
-            newcases(c)
-        elif ans == "6":
-            specificdates(c)
-        elif ans == "7":
-            plotcases(c)
+            if ans == "1":
+                totalnumbers(c)
+            elif ans == "2":
+                newdeaths(c)
+            elif ans == "3":
+                dayssincefirst(c)
+            elif ans == "4":
+                newcases(c)
+            elif ans == "6":
+                specificdates(c)
+            elif ans == "7":
+                plotcases(c)
+        except AttributeError:
+            print("ERROR!\t" + country + " is not a valid 3 letter code")
+
     else:
         worldcases()
 
@@ -103,7 +107,7 @@ def newcases(country):
 
     cases2days = response["Cases"]
 
-    print("Cases Confirmed Yesterday:\t", f"{int(casesyest) - int(cases2days):,d}")
+    print("Cases Confirmed Yesterday in " + country + ":\t", f"{int(casesyest) - int(cases2days):,d}")
     print("This number includes all cases for all the different territories of this country")
 
 
@@ -136,7 +140,7 @@ def newdeaths(country):
 
     cases2days = response["Deaths"]
 
-    print("Deaths Confirmed Yesterday:\t", f"{int(casesyest) - int(cases2days):,d}")
+    print("Deaths Confirmed Yesterday in " + country + ":\t", f"{int(casesyest) - int(cases2days):,d}")
 
 
 def dayssincefirst(country):
