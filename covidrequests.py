@@ -22,7 +22,7 @@ class ByCountryTotal:
               str(self.date1) + "&to=" + str(self.date2)
         response = requests.get(url).json()
 
-        return response
+        return response[0]
 
 
 class CountryAllStatus:
@@ -46,7 +46,7 @@ class CountryAllStatus:
               "&to=" + str(self.date2)
         response = requests.get(url).json()
 
-        return response
+        return response[0]
 
 
 class ByCountryTotalAllStatus:

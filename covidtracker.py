@@ -110,14 +110,12 @@ def newcases(country):
     date3daysago = today - datetime.timedelta(days=3)
 
     temp = ByCountryTotal(country, dateb, datey)
-    r = ByCountryTotal.request(temp)
-    response = urlcleanup(r)
+    response = ByCountryTotal.request(temp)
 
     casesyest = response["Cases"]
 
     temp = ByCountryTotal(country, date3daysago, dateb)
-    r = ByCountryTotal.request(temp)
-    response = urlcleanup(r)
+    response = ByCountryTotal.request(temp)
 
     cases2days = response["Cases"]
 
@@ -143,14 +141,12 @@ def newdeaths(country):
     date3daysago = today - datetime.timedelta(days=3)
 
     temp = CountryAllStatus(country, dateb, datey)
-    r = CountryAllStatus.request(temp)
-    response = urlcleanup(r)
+    response = CountryAllStatus.request(temp)
 
     casesyest = response["Deaths"]
 
     temp = CountryAllStatus(country, date3daysago, dateb)
-    r = CountryAllStatus.request(temp)
-    response = urlcleanup(r)
+    response = CountryAllStatus.request(temp)
 
     cases2days = response["Deaths"]
 
@@ -202,7 +198,7 @@ def worldcases():
 
     death_rate = round((int(response['TotalDeaths']) / int(response['TotalConfirmed'])) * 100, 2)
 
-    cases_per_death = round(int(response['TotalConfirmed']) * (death_rate / 100), 1)
+    cases_per_death = int(int(response['TotalConfirmed']) * (death_rate / 100))
 
     print(f'Total Cases:\t\t{int(response["TotalConfirmed"]):,d}\nTotal Deaths:\t\t{int(response["TotalDeaths"]):,d}\nDeath Rate:\t\t{death_rate}%\nCases/Death:\t\t{(cases_per_death):,d}')
 
@@ -279,42 +275,6 @@ def plotcases(country):
         plt.plot_date(dates, y)
         plt.title("Cases between " + str(date1) + " and " + str(date2), fontweight="bold")
         plt.show()
-
-
-def urlcleanup(r):
-    """
-    Takes in a list and returns a dictionary equivalent so it is easier to access.
-
-    It changes the list into a string.
-    Then it removes all the unnecessary punctuation marks from the string.
-    It then splits the string at every comma.
-    Then it cycles through the new list that is split at every comma and splits it again at the first instance of a
-    colon it come across, this stop it from splitting time objects multiple times.
-    It updates the dictionary with each key and valut it gets from splitting at the colons.
-    Then returns the dicitonary to the calling function.
-    :param r:
-    :return dicitonary:
-    """
-    mydict = {}
-    strR = str(r)
-    newstring = (strR.replace('"', '').replace(' ', '').replace("'", '').replace('{', '').replace('}',
-                 '').replace('[','').replace(']', ''))
-    new = re.split(",", newstring)
-    for item in range(len(new)):
-        temp = new[item].split(":", 1)
-        for i in range(len(temp)):
-            mydict.update({temp[0]: temp[1]})
-
-    return mydict
-
-
-def cleanup(r):
-    strR = str(r)
-    newstring = (strR.replace('"', '').replace(' ', '').replace("'", '').replace('{', '').replace('}',
-                               '').replace('[', '').replace("]", ""))
-    list = re.split("[:,]", newstring)
-
-    return list
 
 
 welcomescreen()
