@@ -22,48 +22,52 @@ def welcomescreen():
     while(flag):
         print("\n\nWelcome to the Covid-19 Tracker App")
 
-        ans = input("What would you like to see?\n"
-                    "1) Total Numbers for country (Confirmed, Recoveries, Deaths & Active cases)\n"
-                    "2) Deaths\t\t\t\t"
-                    "3) Days since first confirmed case\n"
-                    "4) Yesterday's Confirmed Cases\t\t"
-                    "5) World Cases\n"
-                    "6) Cases Betweem Specific Dates\t\t"
-                    "7) Plot a country's cases (In Progress...)\n"
-                    "0) Quit\n")
+        try:
+            ans = int(input("What would you like to see?\n"
+                        "1) Total Numbers for country (Confirmed, Recoveries, Deaths & Active cases)\n"
+                        "2) Deaths\t\t\t\t"
+                        "3) Days since first confirmed case\n"
+                        "4) Yesterday's Confirmed Cases\t\t"
+                        "5) World Cases\n"
+                        "6) Cases Betweem Specific Dates\t\t"
+                        "7) Plot a country's cases (In Progress...)\n"
+                        "0) Quit\n"))
 
-        if ans != "5" and ans != "0" and ans != "":
-            try:
-                print("Please enter the country you would like to see (Using their 3 letter country codes)")
-                country = input("eg. IRL = Ireland, GBR = United Kingdom, USA = USA\n").upper()
-                c = pycountry.countries.get(alpha_3=country).name
+            if ans == 0:
+                flag = False
+            elif ans == 5:
+                worldcases()
+            else:
+                try:
+                    print("Please enter the country you would like to see (Using their 3 letter country codes)")
+                    country = input("eg. IRL = Ireland, GBR = United Kingdom, USA = USA\n").upper()
+                    c = pycountry.countries.get(alpha_3=country).name
 
-                for i in range(len(c)):
-                    if c[i] == ' ':
-                        c = c.replace(c[i], '-')
+                    for i in range(len(c)):
+                        if c[i] == ' ':
+                            c = c.replace(c[i], '-')
 
-                if ans == "1":
-                    totalnumbers(c)
-                elif ans == "2":
-                    newdeaths(c)
-                elif ans == "3":
-                    dayssincefirst(c)
-                elif ans == "4":
-                    newcases(c)
-                elif ans == "6":
-                    specificdates(c)
-                elif ans == "7":
-                    print("This part is not ready yet, please come back later...")
-                    # plotcases(c)
-            except AttributeError:
-                print("ERROR!\t" + country + " is not a valid 3 letter code")
+                    if ans == 1:
+                        totalnumbers(c)
+                    elif ans == 2:
+                        newdeaths(c)
+                    elif ans == 3:
+                        dayssincefirst(c)
+                    elif ans == 4:
+                        newcases(c)
+                    elif ans == 6:
+                        specificdates(c)
+                    elif ans == 7:
+                        print("This part is not ready yet, please come back later...")
+                        # plotcases(c)
+                except AttributeError:
+                    print("ERROR!\t" + country + " is not a valid 3 letter code")
 
-        elif ans == "5":
-            worldcases()
-        elif ans == "0":
-            flag = False
-        else:
-            print("Please enter a valid input between 0-7")
+        except Exception as e:
+            print(e)
+            print("Please only enter integer values!!")
+        except UnboundLocalError:
+            pass
 
 
 def totalnumbers(country):
