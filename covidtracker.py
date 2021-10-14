@@ -16,44 +16,54 @@ def welcomescreen():
     Once they have chosen a country they get sent to the coresponding fucntion with their chosen country
     :return None:
     """
-    print("Welcome to the Covid-19 Tracker App")
+    flag = True
 
-    ans = input("What would you like to see?\n"
-                "1) Total Numbers for country (Confirmed, Recoveries, Deaths & Active cases)\n"
-                "2) Deaths\t\t\t\t\t\t\t"
-                "3) Days since first confirmed case\n"
-                "4) Yesterday's Confirmed Cases\t\t"
-                "5) World Cases\n"
-                "6) Cases Betweem Specific Dates\t\t"
-                "7) Plot a country's cases (In Progress...)\n")
+    # Using the flag to continue the loop until the user decides to exit
+    while(flag):
+        print("\n\nWelcome to the Covid-19 Tracker App")
 
-    if ans != "5":
-        try:
-            print("Please enter the country you would like to see (Using their 3 letter country codes)")
-            country = input("eg. IRL = Ireland, GBR = United Kingdom, USA = USA\n").upper()
-            c = pycountry.countries.get(alpha_3=country).name
+        ans = input("What would you like to see?\n"
+                    "1) Total Numbers for country (Confirmed, Recoveries, Deaths & Active cases)\n"
+                    "2) Deaths\t\t\t\t"
+                    "3) Days since first confirmed case\n"
+                    "4) Yesterday's Confirmed Cases\t\t"
+                    "5) World Cases\n"
+                    "6) Cases Betweem Specific Dates\t\t"
+                    "7) Plot a country's cases (In Progress...)\n"
+                    "0) Quit\n")
 
-            for i in range(len(c)):
-                if c[i] == ' ':
-                    c = c.replace(c[i], '-')
+        if ans != "5" and ans != "0" and ans != "":
+            try:
+                print("Please enter the country you would like to see (Using their 3 letter country codes)")
+                country = input("eg. IRL = Ireland, GBR = United Kingdom, USA = USA\n").upper()
+                c = pycountry.countries.get(alpha_3=country).name
 
-            if ans == "1":
-                totalnumbers(c)
-            elif ans == "2":
-                newdeaths(c)
-            elif ans == "3":
-                dayssincefirst(c)
-            elif ans == "4":
-                newcases(c)
-            elif ans == "6":
-                specificdates(c)
-            elif ans == "7":
-                plotcases(c)
-        except AttributeError:
-            print("ERROR!\t" + country + " is not a valid 3 letter code")
+                for i in range(len(c)):
+                    if c[i] == ' ':
+                        c = c.replace(c[i], '-')
 
-    else:
-        worldcases()
+                if ans == "1":
+                    totalnumbers(c)
+                elif ans == "2":
+                    newdeaths(c)
+                elif ans == "3":
+                    dayssincefirst(c)
+                elif ans == "4":
+                    newcases(c)
+                elif ans == "6":
+                    specificdates(c)
+                elif ans == "7":
+                    print("This part is not ready yet, please come back later...")
+                    # plotcases(c)
+            except AttributeError:
+                print("ERROR!\t" + country + " is not a valid 3 letter code")
+
+        elif ans == "5":
+            worldcases()
+        elif ans == "0":
+            flag = False
+        else:
+            print("Please enter a valid input between 0-7")
 
 
 def totalnumbers(country):
@@ -184,16 +194,13 @@ def worldcases():
     datey = today - datetime.timedelta(days=1)
 
     temp = WorldCases(datey, today)
-    r = WorldCases.request(temp)
-    response = urlcleanup(r)
+    response = WorldCases.request(temp)
 
-    print("Total Cases:\t\t" + f"{int(response['TotalConfirmed']):,d}" + "\nTotal Deaths:\t\t" +
-          f"{int(response['TotalDeaths']):,d}" +
-          "\nTotal Recoveries:\t" + f"{int(response['TotalRecovered']):,d}\n")
+    death_rate = round((int(response['TotalDeaths']) / int(response['TotalConfirmed'])) * 100, 2)
 
-    print("New Cases:\t\t\t" + f"{int(response['NewConfirmed']):,d}" + "\nNew Deaths:\t\t\t" +
-          f"{int(response['NewDeaths']):,d}" +
-          "\nNew Recoveries:\t\t" + f"{int(response['NewRecovered']):,d}")
+    cases_per_death = round(int(response['TotalConfirmed']) * (death_rate / 100), 1)
+
+    print(f'Total Cases:\t\t{int(response["TotalConfirmed"]):,d}\nTotal Deaths:\t\t{int(response["TotalDeaths"]):,d}\nDeath Rate:\t\t{death_rate}%\nCases/Death:\t\t{(cases_per_death):,d}')
 
 
 def specificdates(country):

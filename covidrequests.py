@@ -99,7 +99,7 @@ class WorldCases:
         Sends the from date and to date to the API and gets back a list object as a response.
         :return list:   Returns a list response got from the API
         """
-        url = "https://api.covid19api.com/world?from=" + str(self.date1) + "&to=" + str(self.date2)
+        url = "https://api.covid19api.com/world/total"
         response = requests.get(url).json()
 
         return response
